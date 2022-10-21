@@ -1,15 +1,11 @@
 package com.lvpaul.shiyi.demo.controller;
 
 
-import com.lvpaul.entity.model.demo.Student;
+import com.lvpaul.pojo.entity.demo.Student;
 import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,5 +30,12 @@ public class StudentController {
     }
     @GetMapping("findById/{id}")
     public Student findById(@PathVariable int id){ return studentMapper.findStudentById(id); }
+    @GetMapping("{id}")
+    public Student selectById(@PathVariable int id){ return  studentMapper.selectById(id);}
+    @PostMapping("p")
+    public boolean postStudent(@RequestBody Student student){
+        boolean isSucceed = studentService.save(student);
+        return  isSucceed;
+    }
 }
 

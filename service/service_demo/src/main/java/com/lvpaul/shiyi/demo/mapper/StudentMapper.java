@@ -1,8 +1,7 @@
 package com.lvpaul.shiyi.demo.mapper;
 
-import com.lvpaul.entity.model.demo.Student;
+import com.lvpaul.pojo.entity.demo.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
