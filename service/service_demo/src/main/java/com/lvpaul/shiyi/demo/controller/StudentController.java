@@ -6,6 +6,7 @@ import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +32,7 @@ public class StudentController {
     public List<Student> findAllStudent(){
         return  studentService.list();
     }
-    @GetMapping("findById")
-    public Student findById(){ return studentMapper.findStudentById(1); }
+    @GetMapping("findById/{id}")
+    public Student findById(@PathVariable int id){ return studentMapper.findStudentById(id); }
 }
 
