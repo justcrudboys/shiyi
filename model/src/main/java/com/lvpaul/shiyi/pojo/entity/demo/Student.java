@@ -1,4 +1,4 @@
-package com.lvpaul.pojo.entity.demo;
+package com.lvpaul.shiyi.pojo.entity.demo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

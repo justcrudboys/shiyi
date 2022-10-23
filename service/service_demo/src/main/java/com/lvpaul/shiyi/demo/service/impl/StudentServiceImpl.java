@@ -1,6 +1,6 @@
 package com.lvpaul.shiyi.demo.service.impl;
 
-import com.lvpaul.pojo.entity.demo.Student;
+import com.lvpaul.shiyi.pojo.entity.demo.Student;
 import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
