@@ -5,6 +5,7 @@ import com.lvpaul.shiyi.pojo.entity.demo.Student;
 import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
 import com.lvpaul.shiyi.result.Result;
+import com.lvpaul.shiyi.result.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,11 @@ public class StudentController {
     }
     @GetMapping("findById/{id}")
     public Result findById(@PathVariable int id){
-        return Result.success(studentMapper.findStudentById(id));
+        Student student =studentMapper.findStudentById(id);
+        if(student==null)
+            return Result.error();
+        else
+            return Result.success(student).message(ResultCodeEnum.DATA_ERROR.getMessage());
     }
     @GetMapping("{id}")
     public Student selectById(@PathVariable int id){ return  studentMapper.selectById(id);}
