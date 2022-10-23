@@ -4,6 +4,7 @@ package com.lvpaul.shiyi.demo.controller;
 import com.lvpaul.shiyi.pojo.entity.demo.Student;
 import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
+import com.lvpaul.shiyi.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +26,13 @@ public class StudentController {
     @Autowired
     private StudentMapper studentMapper;
     @GetMapping("findAll")
-    public List<Student> findAllStudent(){
-        return  studentService.list();
+    public Result findAllStudent(){
+        return  Result.success(studentService.list());
     }
     @GetMapping("findById/{id}")
-    public Student findById(@PathVariable int id){ return studentMapper.findStudentById(id); }
+    public Result findById(@PathVariable int id){
+        return Result.success(studentMapper.findStudentById(id));
+    }
     @GetMapping("{id}")
     public Student selectById(@PathVariable int id){ return  studentMapper.selectById(id);}
     @PostMapping("p")
