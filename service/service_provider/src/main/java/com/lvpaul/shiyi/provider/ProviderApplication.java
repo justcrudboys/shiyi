@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author xiaojing
+ * 本服务是用来测试nacos和feign的
  */
 @SpringBootApplication
 @EnableDiscoveryClient
