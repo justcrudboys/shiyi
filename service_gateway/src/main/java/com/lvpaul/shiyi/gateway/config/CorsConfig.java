@@ -19,6 +19,8 @@ public class CorsConfig {
         config.addAllowedOrigin("*");
         //配置允许的请求头
         config.addAllowedHeader("*");
+        //放行cookie
+        config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());
         //配置请求路径使用对应的配置方式
         source.registerCorsConfiguration("/**", config);
