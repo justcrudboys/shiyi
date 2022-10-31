@@ -28,7 +28,7 @@ public class SwaggerConfig {
                 .title("网站-API文档")
                 .description("本文档描述了网站微服务接口定义")
                 .version("1.0")
-                .contact(new Contact("cc", "http://atguigu.com", "1523633524@qq.com"))
+                .contact(new Contact("voltchange", "http://www.baidu.com", "prpr23333@163.com"))
                 .build();
     }
 }
