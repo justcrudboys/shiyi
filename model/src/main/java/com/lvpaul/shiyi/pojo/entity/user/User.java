@@ -10,9 +10,8 @@ import lombok.Data;
 
 @Data
 @ApiModel(value="User对象", description="用户对象")
-public class User implements Serializable {
+public class User{
 
-    private static final long serialVersionUID=1L;
 
     @ApiModelProperty(value = "用户id")
       @TableId(value = "id", type = IdType.AUTO)
