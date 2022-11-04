@@ -6,12 +6,10 @@ import com.lvpaul.shiyi.demo.rpc.RemoteCeshiService;
 import com.lvpaul.shiyi.pojo.entity.demo.Student;
 import com.lvpaul.shiyi.demo.mapper.StudentMapper;
 import com.lvpaul.shiyi.demo.service.StudentService;
-import com.lvpaul.shiyi.result.Result;
-import com.lvpaul.shiyi.result.ResultCodeEnum;
+import com.lvpaul.shiyi.utils.result.Result;
+import com.lvpaul.shiyi.utils.result.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>

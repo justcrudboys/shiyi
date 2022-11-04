@@ -29,5 +29,12 @@ public class User{
       @TableField("password")
     private String password;
 
+    @ApiModelProperty(value = "是否是创作者")
+    @TableField("is_creator")
+    private boolean iscreator;
+
+    @ApiModelProperty(value = "头像")
+    @TableField("avatar")
+    private String avatar;
 
 }

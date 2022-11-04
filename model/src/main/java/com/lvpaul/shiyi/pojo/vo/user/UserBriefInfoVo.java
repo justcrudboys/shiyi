@@ -1,6 +1,7 @@
 package com.lvpaul.shiyi.pojo.vo.user;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,4 +16,10 @@ public class UserBriefInfoVo {
 
     @ApiModelProperty(value = "用户名")
     private String username;
+
+    @ApiModelProperty(value = "是否是创作者")
+    private boolean iscreator;
+
+    @ApiModelProperty(value = "头像")
+    private String avatar;
 }

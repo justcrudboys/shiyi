@@ -2,7 +2,7 @@ package com.lvpaul.shiyi.user.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.lvpaul.shiyi.pojo.vo.user.LoginRequestVo;
-import com.lvpaul.shiyi.result.Result;
+import com.lvpaul.shiyi.utils.result.Result;
 import com.lvpaul.shiyi.user.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

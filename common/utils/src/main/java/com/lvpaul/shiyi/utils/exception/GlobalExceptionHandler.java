@@ -1,6 +1,6 @@
-package com.lvpaul.shiyi.exception;
+package com.lvpaul.shiyi.utils.exception;
 
-import com.lvpaul.shiyi.result.Result;
+import com.lvpaul.shiyi.utils.result.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

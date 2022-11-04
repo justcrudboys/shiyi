@@ -1,12 +1,8 @@
 package com.lvpaul.shiyi.provider.controller;
 
 import com.lvpaul.shiyi.pojo.entity.demo.Student;
-import com.lvpaul.shiyi.result.Result;
-import com.lvpaul.shiyi.result.ResultCodeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lvpaul.shiyi.utils.result.Result;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>

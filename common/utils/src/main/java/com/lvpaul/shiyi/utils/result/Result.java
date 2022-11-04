@@ -1,4 +1,4 @@
-package com.lvpaul.shiyi.result;
+package com.lvpaul.shiyi.utils.result;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

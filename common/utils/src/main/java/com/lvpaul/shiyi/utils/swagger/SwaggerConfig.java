@@ -1,4 +1,4 @@
-package com.lvpaul.shiyi.swagger;
+package com.lvpaul.shiyi.utils.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

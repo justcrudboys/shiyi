@@ -1,6 +1,6 @@
 package com.lvpaul.shiyi.demo.rpc;
 
-import com.lvpaul.shiyi.result.Result;
+import com.lvpaul.shiyi.utils.result.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 
