@@ -12,9 +12,21 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     UserMapper userMapper;
     @Override
-    public  boolean checkUserLogin(String phone, String password) {
+    public  boolean checkUserLoginByPhone(String phone, String password) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("phone",phone);
+        User user = userMapper.selectOne(wrapper);
+        if(user!=null&&user.getPassword().equals(password)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean checkUserLoginByName(String username, String password) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username",username);
         User user = userMapper.selectOne(wrapper);
         if(user!=null&&user.getPassword().equals(password)){
             return true;
@@ -27,6 +39,18 @@ public class LoginServiceImpl implements LoginService {
     public Long getIdByPhone(String phone) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("phone",phone);
+        User user = userMapper.selectOne(wrapper);
+        if(user!=null){
+            return user.getId();
+        }else {
+            return null;
+        }
+    }
+
+    @Override
+    public Long getIdByName(String username) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username",username);
         User user = userMapper.selectOne(wrapper);
         if(user!=null){
             return user.getId();

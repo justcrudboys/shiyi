@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/user/info")
 public class UserInfoController {
@@ -21,17 +24,17 @@ public class UserInfoController {
     FileService fileService;
     @GetMapping("brief")
     public Result briefInfo(){
+
         Long id =   Long.parseLong((String)StpUtil.getLoginId());
         User user = userService.getById(id);
         if(user!=null){
-            UserBriefInfoVo briefInfoVo = new UserBriefInfoVo();
-            briefInfoVo.setId(user.getId());
-            briefInfoVo.setUsername(user.getUsername());
-            briefInfoVo.setPhone(user.getPhone());
-            briefInfoVo.setIscreator(user.isIscreator());
-            briefInfoVo.setAvatar(user.getAvatar());
-            return Result.success(briefInfoVo);
-        }else{
+            Map<String,Object> map = new HashMap<>();
+            map.put("avatar",user.getAvatar());
+            map.put("name",user.getUsername());
+            map.put("roles","user");
+            return Result.success(map);
+
+        }else {
             return Result.error().message("id不存在于数据库中");
         }
     }
