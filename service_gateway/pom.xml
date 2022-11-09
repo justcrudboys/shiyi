@@ -17,13 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-
-        <!--引入的工具模块 -->
-        <dependency>
-            <groupId>com.lvpaul</groupId>
-            <artifactId>utils</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!--网关-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
