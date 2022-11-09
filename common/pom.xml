@@ -60,7 +60,12 @@
             <groupId>com.qcloud</groupId>
             <artifactId>cos_api</artifactId>
         </dependency>
-
+        <!--sa-token-->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.31.0</version>
+        </dependency>
     </dependencies>
 
 </project>

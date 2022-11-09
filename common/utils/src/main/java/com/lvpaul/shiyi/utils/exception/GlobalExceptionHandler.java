@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.utils.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import com.lvpaul.shiyi.utils.result.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,11 +20,11 @@ public class GlobalExceptionHandler {
         return Result.error().message("执行了全局异常处理");
     }
     //特定异常处理
-    @ExceptionHandler({ArithmeticException.class,NullPointerException.class})
+    @ExceptionHandler({NotLoginException.class})
     @ResponseBody
-    public Result error(ArithmeticException e){
+    public Result error(NotLoginException e){
         e.printStackTrace();
-        return Result.error().message("执行了特定异常处理");
+        return Result.error().message("未能读取到有效token");
     }
 
     //自定义异常处理
