@@ -37,4 +37,8 @@ public class User{
     @TableField("avatar")
     private String avatar;
 
+    @ApiModelProperty(value = "个性签名")
+    @TableField("signature")
+    private String signature;
+
 }
