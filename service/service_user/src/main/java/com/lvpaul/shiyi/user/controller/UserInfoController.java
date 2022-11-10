@@ -81,7 +81,7 @@ public class UserInfoController {
     @PutMapping("signature")
     public Result changeSignature(
             @ApiParam(name = "signature", value = "个性签名", required = true)
-            @RequestParam("signature") String signature) {
+            @RequestBody String signature) {
         Long id =   Long.parseLong((String)StpUtil.getLoginId());
         User user = userService.getById(id);
         if(user==null)
