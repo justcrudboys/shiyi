@@ -58,7 +58,7 @@ public class UserInfoController {
             return Result.error().message("id不存在于数据库中");
         }
     }
-    @PutMapping("avatar")
+    @PostMapping("avatar")
     public Result uploadAvatar(
             @ApiParam(name = "file", value = "文件", required = true)
             @RequestParam("file") MultipartFile file) {
@@ -70,10 +70,22 @@ public class UserInfoController {
         String uploadUrl = fileService.uploadAvatar(file);
         if(uploadUrl==null)
             return Result.error().message("文件上传失败");
-
-        user.setAvatar(uploadUrl);
-        if(userService.updateById(user))
+        else
             return Result.success(uploadUrl);
+
+    }
+    @PutMapping("avatar")
+    public Result updateAvatar(
+            @ApiParam(name = "file", value = "文件", required = true)
+            @RequestBody String url) {
+        Long id =   Long.parseLong((String)StpUtil.getLoginId());
+        User user = userService.getById(id);
+        if(user==null)
+            return Result.error().message("id不存在于数据库中");
+
+        user.setAvatar(url);
+        if(userService.updateById(user))
+            return Result.success(url);
         else
             return Result.error().message("头像更新失败");
 
