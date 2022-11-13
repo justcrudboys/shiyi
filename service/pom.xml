@@ -16,6 +16,7 @@
         <module>service_provider</module>
         <module>service_user</module>
         <module>service_creator</module>
+        <module>service_post</module>
     </modules>
 
     <properties>
