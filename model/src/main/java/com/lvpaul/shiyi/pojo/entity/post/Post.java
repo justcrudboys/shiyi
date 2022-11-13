@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.pojo.entity.post;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
@@ -10,11 +11,11 @@ import lombok.Data;
 @ApiModel(value="Post对象", description="动态对象")
 public class Post {
     @ApiModelProperty(value = "动态id")
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "频道id")
-    @TableId(value = "channel_id")
+    @TableField(value = "channel_id")
     private Long channelId;
 
     @ApiModelProperty(value = "动态内容")
