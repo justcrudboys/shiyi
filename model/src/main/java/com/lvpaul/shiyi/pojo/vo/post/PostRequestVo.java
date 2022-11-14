@@ -12,4 +12,7 @@ public class PostRequestVo {
     @ApiModelProperty(value = "动态内容")
     private String content;
 
+    @ApiModelProperty(value = "动态时间")
+    private String datetime;
+
 }

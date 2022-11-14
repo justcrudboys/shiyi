@@ -23,9 +23,11 @@ public class PostController {
     public Result createPost(@RequestBody PostRequestVo postRequestVo){
         Long channelId = postRequestVo.getChannelId();
         String content = postRequestVo.getContent();
+        String datetime = postRequestVo.getDatetime();
         Post post = new Post();
         post.setChannelId(channelId);
         post.setContent(content);
+        post.setPostTime(datetime);
 
         if(postService.save(post))
             return Result.success();
