@@ -1,10 +1,9 @@
 package com.lvpaul.shiyi.channel.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.lvpaul.shiyi.channel.service.ChannelService;
 import com.lvpaul.shiyi.channel.service.ImgService;
 import com.lvpaul.shiyi.pojo.entity.channel.Channel;
-import com.lvpaul.shiyi.pojo.vo.user.*;
+import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;

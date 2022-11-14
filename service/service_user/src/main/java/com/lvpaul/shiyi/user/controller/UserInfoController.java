@@ -2,10 +2,8 @@ package com.lvpaul.shiyi.user.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.lvpaul.shiyi.pojo.entity.user.User;
-import com.lvpaul.shiyi.pojo.vo.user.UserBriefInfoVo;
 import com.lvpaul.shiyi.pojo.vo.user.UserDetailVo;
 import com.lvpaul.shiyi.user.service.FileService;
-import com.lvpaul.shiyi.utils.file.cos.COSFileUtil;
 import com.lvpaul.shiyi.utils.result.Result;
 import com.lvpaul.shiyi.user.service.UserService;
 import io.swagger.annotations.ApiParam;
