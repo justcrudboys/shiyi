@@ -1,11 +1,10 @@
-package com.lvpaul.shiyi.pojo.vo.user;
+package com.lvpaul.shiyi.pojo.vo.channel;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class ChannelDetailVo {
-
     @ApiModelProperty(value = "频道id")
     private Long id;
 
@@ -17,4 +16,7 @@ public class ChannelDetailVo {
 
     @ApiModelProperty(value = "创作者id")
     private Long creator_id;
+
+    @ApiModelProperty(value = "频道图片")
+    private String img;
 }

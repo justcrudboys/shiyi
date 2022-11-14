@@ -16,14 +16,18 @@ public class Channel {
     private Long id;
 
     @ApiModelProperty(value = "频道名字")
-    @TableId(value = "name")
+    @TableField(value = "name")
     private String name;
 
     @ApiModelProperty(value = "频道简介")
-    @TableId(value = "introduction")
+    @TableField(value = "introduction")
     private String introduction;
 
     @ApiModelProperty(value = "创作者id")
     @TableField(value = "creator_id")
     private Long creator_id;
+
+    @ApiModelProperty(value = "频道图片")
+    @TableField(value = "img")
+    private String img;
 }
