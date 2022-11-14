@@ -1,4 +1,4 @@
-package com.lvpaul.shiyi.pojo.vo.channel;
+package com.lvpaul.shiyi.pojo.vo.user;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
