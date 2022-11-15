@@ -12,12 +12,6 @@
     <groupId>com.lvpaul.shiyi.channel</groupId>
     <artifactId>service_channel</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>com.lvpaul</groupId>
-            <artifactId>service_user</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
     <properties>

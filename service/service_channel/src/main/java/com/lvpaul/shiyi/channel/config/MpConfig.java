@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @MapperScan("com.lvpaul.shiyi.channel.mapper")
-public class MpConfig1 {
+public class MpConfig {
 }
