@@ -25,5 +25,9 @@ public class Post {
     @ApiModelProperty(value = "动态发布时间")
     @TableField("post_time")
     private String postTime;
+
+    @ApiModelProperty(value = "动态名字")
+    @TableField("post_name")
+    private String postName;
 }
 
