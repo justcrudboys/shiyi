@@ -9,7 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service_post</artifactId>
+    <groupId>com.lvpaul.shiyi.channel</groupId>
+    <artifactId>service_channel</artifactId>
+    <dependencies>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
