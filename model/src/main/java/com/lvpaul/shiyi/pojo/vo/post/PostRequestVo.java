@@ -3,6 +3,8 @@ package com.lvpaul.shiyi.pojo.vo.post;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class PostRequestVo {
 
@@ -14,5 +16,12 @@ public class PostRequestVo {
 
     @ApiModelProperty(value = "动态时间")
     private String datetime;
+
+    @ApiModelProperty(value = "附件名列表")
+    private List<String> nameList;
+
+    @ApiModelProperty(value = "附件url列表")
+    private List<String> urlList;
+
 
 }
