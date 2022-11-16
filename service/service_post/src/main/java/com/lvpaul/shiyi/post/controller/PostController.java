@@ -1,17 +1,19 @@
 package com.lvpaul.shiyi.post.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.lvpaul.shiyi.pojo.entity.post.PostAttachment;
+import com.lvpaul.shiyi.pojo.entity.user.User;
+import com.lvpaul.shiyi.post.service.FileService;
 import com.lvpaul.shiyi.post.service.PostAttachmentService;
 import com.lvpaul.shiyi.post.service.PostService;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
 import com.lvpaul.shiyi.pojo.vo.post.PostRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,7 +25,21 @@ public class PostController {
     PostService postService;
     @Autowired
     PostAttachmentService postAttachmentService;
+    @Autowired
+    FileService fileService;
 
+    @PostMapping("file")
+    public Result uploadFile(
+            @ApiParam(name = "file", value = "文件", required = true)
+            @RequestParam("file") MultipartFile file) {
+
+        String uploadUrl = fileService.uploadFile(file);
+        if(uploadUrl==null)
+            return Result.error().message("文件上传失败");
+        else
+            return Result.success(uploadUrl);
+
+    }
     @ApiOperation("新建动态")
     @PostMapping("createPost")
     public Result createPost(@RequestBody PostRequestVo postRequestVo){
