@@ -1,6 +1,8 @@
 package com.lvpaul.shiyi.pojo.entity.subscription;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -38,7 +40,7 @@ public class Subscription implements Serializable {
 
     @ApiModelProperty(value = "订阅到期时间")
     @TableField("expire_time")
-    private Date expireTime;
+    private LocalDateTime expireTime;
 
 
 }
