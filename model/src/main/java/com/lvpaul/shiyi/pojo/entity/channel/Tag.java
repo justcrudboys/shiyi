@@ -1,8 +1,11 @@
 package com.lvpaul.shiyi.pojo.entity.channel;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,6 +23,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@TableName("tag")
 @ApiModel(value="Tag对象", description="频道分类标签")
 public class Tag implements Serializable {
 
@@ -30,6 +34,7 @@ public class Tag implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "标签名字")
+    @TableField(value = "name")
     private String name;
 
 

@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.pojo.entity.post;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -32,6 +33,7 @@ public class ChannelPlanPostRelation implements Serializable {
     private Long postId;
 
     @ApiModelProperty(value = "赞助方案id")
+    @TableField("plan_id")
     private Long planId;
 
 

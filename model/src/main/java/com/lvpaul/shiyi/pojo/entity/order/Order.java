@@ -2,6 +2,7 @@ package com.lvpaul.shiyi.pojo.entity.order;
 
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -31,15 +32,19 @@ public class Order implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "下订单用户id")
+    @TableField("user_id")
     private Long userId;
 
     @ApiModelProperty(value = "赞助方案id")
+    @TableField("plan_id")
     private Long planId;
 
     @ApiModelProperty(value = "订阅的月数")
+    @TableField("subscribe_month")
     private Integer subscribeMonth;
 
     @ApiModelProperty(value = "订单金额")
+    @TableField("money_amount")
     private BigDecimal moneyAmount;
 
 

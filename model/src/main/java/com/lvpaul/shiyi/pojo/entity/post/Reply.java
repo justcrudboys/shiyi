@@ -2,6 +2,8 @@ package com.lvpaul.shiyi.pojo.entity.post;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -31,12 +33,15 @@ public class Reply implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "回复内容")
+    @TableField("content")
     private String content;
 
     @ApiModelProperty(value = "回复所属动态帖id")
+    @TableField("post_id")
     private Long postId;
 
     @ApiModelProperty(value = "回复时间")
+    @TableField("reply_time")
     private Date replyTime;
 
 

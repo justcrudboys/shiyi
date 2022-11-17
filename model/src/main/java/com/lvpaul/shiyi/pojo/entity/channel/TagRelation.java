@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.pojo.entity.channel;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -32,6 +33,7 @@ public class TagRelation implements Serializable {
     private Long channelId;
 
     @ApiModelProperty(value = "标签id")
+    @TableField(value = "tag_id")
     private Integer tagId;
 
 
