@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.pojo.entity.channel;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -32,12 +33,15 @@ public class Plan implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "频道id")
+    @TableField(value = "channel_id")
     private Long channelId;
 
     @ApiModelProperty(value = "赞助计划金额(元/月)")
+    @TableField(value = "amount")
     private Integer amount;
 
     @ApiModelProperty(value = "赞助计划名字")
+    @TableField(value = "name")
     private String name;
 
     @ApiModelProperty(value = "赞助计划介绍")
