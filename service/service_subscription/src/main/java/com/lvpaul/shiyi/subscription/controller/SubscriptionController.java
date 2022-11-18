@@ -1,8 +1,10 @@
 package com.lvpaul.shiyi.subscription.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lvpaul.shiyi.pojo.entity.post.ChannelPlanPostRelation;
 import com.lvpaul.shiyi.pojo.entity.subscription.Subscription;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionRequestVo;
+import com.lvpaul.shiyi.subscription.service.ChannelPlanPostRelationService;
 import com.lvpaul.shiyi.subscription.service.SubscriptionService;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
@@ -12,20 +14,42 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/subscription")
 public class SubscriptionController {
     @Autowired
     SubscriptionService subscriptionService;
-    @GetMapping
+    @Autowired
+    ChannelPlanPostRelationService channelPlanPostRelationService;
+    @GetMapping("list")
     @ApiOperation("通过id获取用户还生效的订阅")
-    public Result getSubscriptionList(@RequestParam Long id){
+    public Result getSubscriptionList(@RequestParam Long userId){
         QueryWrapper<Subscription> wrapper = new QueryWrapper<>();
         //找出此时还在订阅期内的
-        wrapper.eq("user_id",id).ge("expire_time",LocalDateTime.now());
+        wrapper.eq("user_id",userId).ge("expire_time",LocalDateTime.now());
         List<Subscription> subscriptions = subscriptionService.list(wrapper);
         return Result.success(subscriptions);
+    }
+    @GetMapping("post")
+    @ApiOperation("判断用户对某个动态是否有权限浏览")
+    public boolean isPostValid (@RequestParam Long userId,@RequestParam Long postId){
+        //找出该动态支持的方案
+        QueryWrapper<ChannelPlanPostRelation> planWrapper = new QueryWrapper<>();
+        planWrapper.eq("post_id",postId);
+        List<ChannelPlanPostRelation> postPlanList = channelPlanPostRelationService.list(planWrapper);
+        List<Long> planIdList = postPlanList.stream().map(ChannelPlanPostRelation::getPlanId).collect(Collectors.toList());
+        //查出用户是否有还在有效期内的那些方案的订阅
+        QueryWrapper<Subscription> subWrapper = new QueryWrapper<>();
+        subWrapper.eq("user_id",userId)
+                .in("plan_id",planIdList)
+                .ge("expire_time",LocalDateTime.now());
+        if(subscriptionService.list(subWrapper).size()>0){
+            return true;
+        }else {
+            return false;
+        }
     }
     @PostMapping
     @ApiOperation("用户订阅")
