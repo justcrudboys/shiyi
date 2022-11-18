@@ -40,6 +40,9 @@ public class SubscriptionController {
         planWrapper.eq("post_id",postId);
         List<ChannelPlanPostRelation> postPlanList = channelPlanPostRelationService.list(planWrapper);
         List<Long> planIdList = postPlanList.stream().map(ChannelPlanPostRelation::getPlanId).collect(Collectors.toList());
+        if(planIdList.size()==0){
+            return true; //动态不设置相应的方案档位默认全部用户可浏览
+        }
         //查出用户是否有还在有效期内的那些方案的订阅
         QueryWrapper<Subscription> subWrapper = new QueryWrapper<>();
         subWrapper.eq("user_id",userId)
