@@ -1,8 +1,10 @@
 package com.lvpaul.shiyi.post.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.lvpaul.shiyi.pojo.entity.post.ChannelPlanPostRelation;
 import com.lvpaul.shiyi.pojo.entity.post.PostAttachment;
 import com.lvpaul.shiyi.pojo.entity.user.User;
+import com.lvpaul.shiyi.post.service.ChannelPlanPostRelationService;
 import com.lvpaul.shiyi.post.service.FileService;
 import com.lvpaul.shiyi.post.service.PostAttachmentService;
 import com.lvpaul.shiyi.post.service.PostService;
@@ -31,6 +33,8 @@ public class PostController {
     PostAttachmentService postAttachmentService;
     @Autowired
     FileService fileService;
+    @Autowired
+    ChannelPlanPostRelationService channelPlanPostRelationService;
 
     @PostMapping("file")
     public Result uploadFile(
@@ -48,18 +52,26 @@ public class PostController {
     @PostMapping("createPost")
     public Result createPost(@RequestBody PostRequestVo postRequestVo){
         Long channelId = postRequestVo.getChannelId();
+        String title = postRequestVo.getTitle();
         String content = postRequestVo.getContent();
         String datetime = postRequestVo.getDatetime();
         List<String> nameList = postRequestVo.getNameList();
         List<String> urlList = postRequestVo.getUrlList();
+        long planId = postRequestVo.getPlanId();
         int n = nameList.size();
 
         Post post = new Post();
         post.setChannelId(channelId);
+        post.setPostName(title);
         post.setContent(content);
         post.setPostTime(datetime);
-
         if(!postService.save(post))
+            return Result.error();
+
+        ChannelPlanPostRelation channelPlanPostRelation = new ChannelPlanPostRelation();
+        channelPlanPostRelation.setPostId(post.getId());
+        channelPlanPostRelation.setPlanId(planId);
+        if(!channelPlanPostRelationService.save(channelPlanPostRelation))
             return Result.error();
 
         for(int i=0;i<n;i++){

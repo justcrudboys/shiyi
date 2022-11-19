@@ -29,11 +29,11 @@ public class ChannelPlanPostRelation implements Serializable {
     private static final long serialVersionUID=1L;
 
     @ApiModelProperty(value = "动态帖id")
-      @TableId(value = "post_id", type = IdType.AUTO)
+    @TableId(value = "post_id")
     private Long postId;
 
     @ApiModelProperty(value = "赞助方案id")
-    @TableField("plan_id")
+    @TableId("plan_id")
     private Long planId;
 
 

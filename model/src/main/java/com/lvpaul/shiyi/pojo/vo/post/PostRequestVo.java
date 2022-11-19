@@ -11,6 +11,9 @@ public class PostRequestVo {
     @ApiModelProperty(value = "频道id")
     private long channelId;
 
+    @ApiModelProperty(value = "动态标题")
+    private String title;
+
     @ApiModelProperty(value = "动态内容")
     private String content;
 
@@ -23,5 +26,6 @@ public class PostRequestVo {
     @ApiModelProperty(value = "附件url列表")
     private List<String> urlList;
 
-
+    @ApiModelProperty(value = "赞助计划id")
+    private long planId;
 }

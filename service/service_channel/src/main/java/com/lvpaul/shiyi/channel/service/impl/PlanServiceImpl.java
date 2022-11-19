@@ -1,11 +1,18 @@
 package com.lvpaul.shiyi.channel.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lvpaul.shiyi.channel.mapper.ChannelMapper;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.service.PlanService;
+import com.lvpaul.shiyi.pojo.entity.channel.Channel;
 import com.lvpaul.shiyi.pojo.entity.channel.Plan;
+import com.lvpaul.shiyi.pojo.entity.post.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +24,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PlanServiceImpl extends ServiceImpl<PlanMapper, Plan> implements PlanService {
+    @Autowired
+    PlanMapper planMapper;
+    @Override
+    public List<Plan> getChannelPlan(Long channel_id){
+        QueryWrapper<Plan> qw = new QueryWrapper<>();
+        qw.eq("channel_id", channel_id);
+        List<Plan> planList = planMapper.selectList(qw);
+        return planList;
+    }
 
 }
