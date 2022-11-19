@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,6 +25,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="Order对象", description="订单")
+@TableName("`order`")
 public class Order implements Serializable {
 
     private static final long serialVersionUID=1L;
@@ -47,5 +50,8 @@ public class Order implements Serializable {
     @TableField("money_amount")
     private BigDecimal moneyAmount;
 
+    @ApiModelProperty(value = "状态")
+    @TableField("status")
+    private Integer status;
 
 }
