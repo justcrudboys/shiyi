@@ -9,7 +9,7 @@ alipay:
   #  returnUrl: http://IP:端口/success.html
   returnUrl: http://www.baidu.com
   # 支付完成后异步调用的地址，返回结果中，确认收款成功的key值是 trade_status
-  #  notifyUrl:
+  notifyUrl: http://47.100.220.20:10001/notify
   # 签名方式
   signType: RSA2
   # 编码格式
