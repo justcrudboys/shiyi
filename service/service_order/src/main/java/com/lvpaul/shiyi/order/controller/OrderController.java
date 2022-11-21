@@ -9,6 +9,8 @@ import com.lvpaul.shiyi.pojo.vo.order.AlipayOrder;
 import com.lvpaul.shiyi.pojo.vo.order.OrderRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +18,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/order")
+@RabbitListener(queues = {"payment.fanout.queue"})
 public class OrderController {
     @Autowired
     OrderService orderService;
     @Autowired
     AlipayService alipayService;
+
+    @RabbitHandler
+    public void changeSubscription(String message){
+        System.out.println("=====接受到"+message+"==========");
+    }
     @ApiOperation("返回用户所有订单")
     @GetMapping("list")
     public Result getOrderList(@RequestParam Long id){
@@ -32,7 +40,7 @@ public class OrderController {
     @GetMapping("/order/alipay")
     public String alipay(){
         AlipayOrder alipayOrder = new AlipayOrder();
-        alipayOrder.setOut_trade_no("12345678");
+        alipayOrder.setOut_trade_no("1234567890");
         alipayOrder.setSubject("测试订单");
         alipayOrder.setTotal_amount("30001.12");
 
