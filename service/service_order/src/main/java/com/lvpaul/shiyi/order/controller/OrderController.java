@@ -37,10 +37,10 @@ public class OrderController {
         List<Order> orderList= orderService.list(wrapper);
         return Result.success(orderList);
     }
-    @GetMapping("/order/alipay")
+    @GetMapping("alipay")
     public String alipay(){
         AlipayOrder alipayOrder = new AlipayOrder();
-        alipayOrder.setOut_trade_no("1234567890");
+        alipayOrder.setOut_trade_no("5666117233");
         alipayOrder.setSubject("测试订单");
         alipayOrder.setTotal_amount("30001.12");
 
