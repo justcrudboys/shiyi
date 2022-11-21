@@ -7,6 +7,7 @@ alipay:
   publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg/Sk0xCJXCvdRILCK1CkBshdjN/vg0m+wEhGlGnFX3kQJinaoLnTLz9iYQqRIu5YhoL5BKwkmtSd/CRpddKTWzLvocDGibPHFBNSCRpRv325iMFe9q2FYcWG14sh5JHmu3scaVqhOsQMvhhtcvOJU4kRNuHYWUXU6vB6SwlQQvV5NlNOGSl8FXnm4o/5b9Rk9hl7dw9RKFcoqcitQ/THkL2SSJpsnYpy6OKfN0GeimchAqukfJL6kXh9Goly0PM4q/fHV2YWmgf/3mRLB8JHBUUXRcswlJtPsRaARCN35MwnNyGqYfLHwtRLYirSmuLJg/pFfxXHA34X2ySy94iZVwIDAQAB
   # 支付完成后同步跳转的路径
   #  returnUrl: http://IP:端口/success.html
+  returnUrl: http://www.baidu.com
   # 支付完成后异步调用的地址，返回结果中，确认收款成功的key值是 trade_status
   #  notifyUrl:
   # 签名方式
@@ -15,3 +16,11 @@ alipay:
   charset: utf-8
   # 支付宝网关
   gatewayUrl: https://openapi.alipaydev.com/gateway.do
+
+spring:
+  rabbitmq:
+    host: 81.68.67.192
+    port: 5673 #jingranshi5673
+    username: admin
+    password: admin
+    virtual-host: shiyi
