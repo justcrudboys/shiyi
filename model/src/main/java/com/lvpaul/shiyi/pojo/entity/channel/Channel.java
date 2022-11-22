@@ -25,7 +25,7 @@ public class Channel {
 
     @ApiModelProperty(value = "创作者id")
     @TableField(value = "creator_id")
-    private Long creator_id;
+    private Long creatorId;
 
     @ApiModelProperty(value = "频道图片")
     @TableField(value="img")

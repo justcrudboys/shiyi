@@ -1,7 +1,10 @@
 package com.lvpaul.shiyi.channel.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
  * @since 2022-11-17
  */
 public interface TagRelationService extends IService<TagRelation> {
-
+    public List<TagRelation> getChannelTagRelation(Long channelId);
 }
