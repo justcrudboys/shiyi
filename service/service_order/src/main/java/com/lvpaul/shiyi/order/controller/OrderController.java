@@ -1,12 +1,15 @@
 package com.lvpaul.shiyi.order.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alipay.api.domain.OrderDetail;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lvpaul.shiyi.order.rpc.RemoteSubscriptionService;
 import com.lvpaul.shiyi.order.service.OrderService;
 import com.lvpaul.shiyi.order.service.impl.AlipayService;
 import com.lvpaul.shiyi.pojo.entity.order.Order;
 import com.lvpaul.shiyi.pojo.vo.order.AlipayOrder;
 import com.lvpaul.shiyi.pojo.vo.order.OrderRequestVo;
+import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -24,10 +27,23 @@ public class OrderController {
     OrderService orderService;
     @Autowired
     AlipayService alipayService;
-
+    @Autowired
+    RemoteSubscriptionService remoteSubscriptionService;
     @RabbitHandler
+    @GetMapping("aaa")
     public void changeSubscription(String message){
         System.out.println("=====接受到"+message+"==========");
+        Long orderId = Long.parseLong(message);
+        Order order = orderService.getById(orderId);
+        if(order == null)
+            throw new RuntimeException();
+        order.setStatus(1);
+        orderService.updateById(order);
+        SubscriptionRequestVo subscriptionRequest=new SubscriptionRequestVo();
+        subscriptionRequest.setMonth(order.getSubscribeMonth());
+        subscriptionRequest.setUserId(order.getUserId());
+        subscriptionRequest.setPlanId(order.getPlanId());
+        remoteSubscriptionService.subscribe(subscriptionRequest);
     }
     @ApiOperation("返回用户所有订单")
     @GetMapping("list")
@@ -38,12 +54,15 @@ public class OrderController {
         return Result.success(orderList);
     }
     @GetMapping("alipay")
-    public String alipay(){
-        AlipayOrder alipayOrder = new AlipayOrder();
-        alipayOrder.setOut_trade_no("5666117233");
-        alipayOrder.setSubject("测试订单");
-        alipayOrder.setTotal_amount("30001.12");
+    public String alipay(@RequestParam Long orderId){
+        Order order = orderService.getById(orderId);
+        if(order == null)
+            throw new RuntimeException();
 
+        AlipayOrder alipayOrder = new AlipayOrder();
+        alipayOrder.setOut_trade_no(orderId.toString());
+        alipayOrder.setSubject(order.getPlanId().toString());
+        alipayOrder.setTotal_amount(order.getMoneyAmount().toString());
         return alipayService.pay(alipayOrder);
     }
     @ApiOperation("生成订单")
