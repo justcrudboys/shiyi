@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.subscription.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lvpaul.shiyi.pojo.entity.post.ChannelPlanPostRelation;
 import com.lvpaul.shiyi.pojo.entity.subscription.Subscription;
@@ -63,14 +64,15 @@ public class SubscriptionController {
     }
     @GetMapping("post")
     @ApiOperation("判断用户对某个动态是否有权限浏览")
-    public boolean isPostValid (@RequestParam Long userId,@RequestParam Long postId){
+    public Result isPostValid (@RequestParam Long postId){
+        Long userId =   Long.parseLong((String) StpUtil.getLoginId());
         //找出该动态支持的方案
         QueryWrapper<ChannelPlanPostRelation> planWrapper = new QueryWrapper<>();
         planWrapper.eq("post_id",postId);
         List<ChannelPlanPostRelation> postPlanList = channelPlanPostRelationService.list(planWrapper);
         List<Long> planIdList = postPlanList.stream().map(ChannelPlanPostRelation::getPlanId).collect(Collectors.toList());
         if(planIdList.size()==0){
-            return true; //动态不设置相应的方案档位默认全部用户可浏览
+            return Result.success(true); //动态不设置相应的方案档位默认全部用户可浏览
         }
         //查出用户是否有还在有效期内的那些方案的订阅
         QueryWrapper<Subscription> subWrapper = new QueryWrapper<>();
@@ -78,9 +80,9 @@ public class SubscriptionController {
                 .in("plan_id",planIdList)
                 .ge("expire_time",LocalDateTime.now());
         if(subscriptionService.list(subWrapper).size()>0){
-            return true;
+            return Result.success(true);
         }else {
-            return false;
+            return Result.success(false);
         }
     }
     @PostMapping
