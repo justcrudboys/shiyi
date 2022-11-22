@@ -1,8 +1,12 @@
 package com.lvpaul.shiyi.channel.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.service.ChannelService;
 import com.lvpaul.shiyi.channel.service.ImgService;
+import com.lvpaul.shiyi.channel.service.PlanService;
 import com.lvpaul.shiyi.pojo.entity.channel.Channel;
+import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelPutRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
@@ -23,6 +27,8 @@ public class ChannelInfoController {
 
     @Autowired
     ImgService imgService;
+    @Autowired
+    PlanService planService;
 
     @GetMapping("mychannel")
     public Result MyChannel(@RequestParam(value = "creator_id")Long creator_id) {
@@ -60,6 +66,11 @@ public class ChannelInfoController {
             return Result.error();
     }
 
+    @GetMapping("channelPlan")
+    public Result channelPlan(@RequestParam(value = "channel_id")Long channelId) {
+        List<Plan> planList = planService.getChannelPlan(channelId);
+        return Result.success(planList);
+    }
     @ApiOperation("返回当前频道的信息")
     @GetMapping("getChannelInfo")
     public Result getChannelInfo(@RequestParam(value = "channel_id")Long channelId) {

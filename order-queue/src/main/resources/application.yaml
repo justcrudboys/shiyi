@@ -1,0 +1,7 @@
+spring:
+  rabbitmq:
+    host: 81.68.67.192
+    port: 5673 #jingranshi5673
+    username: admin
+    password: admin
+    virtual-host: shiyi
