@@ -3,8 +3,13 @@ package com.lvpaul.shiyi.subscription.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lvpaul.shiyi.pojo.entity.post.ChannelPlanPostRelation;
 import com.lvpaul.shiyi.pojo.entity.subscription.Subscription;
+import com.lvpaul.shiyi.pojo.entity.channel.Channel;
+import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionRequestVo;
+import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionDetailVo;
+import com.lvpaul.shiyi.subscription.rpc.RemoteChannelService;
 import com.lvpaul.shiyi.subscription.service.ChannelPlanPostRelationService;
+import com.lvpaul.shiyi.subscription.service.PlanService;
 import com.lvpaul.shiyi.subscription.service.SubscriptionService;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +30,10 @@ public class SubscriptionController {
     SubscriptionService subscriptionService;
     @Autowired
     ChannelPlanPostRelationService channelPlanPostRelationService;
+    @Autowired
+    PlanService planService;
+    @Autowired
+    RemoteChannelService remoteChannelService;
     @GetMapping("list")
     @ApiOperation("通过id获取用户还生效的订阅")
     public Result getSubscriptionList(@RequestParam Long userId){
@@ -30,7 +41,25 @@ public class SubscriptionController {
         //找出此时还在订阅期内的
         wrapper.eq("user_id",userId).ge("expire_time",LocalDateTime.now());
         List<Subscription> subscriptions = subscriptionService.list(wrapper);
-        return Result.success(subscriptions);
+        List<SubscriptionDetailVo> detailedSubs = new ArrayList<>();
+        for(int i = 0;i < subscriptions.size();i++){
+            SubscriptionDetailVo subscriptionDetailVo = new SubscriptionDetailVo();
+            subscriptionDetailVo.setUserId(subscriptions.get(i).getUserId());
+            subscriptionDetailVo.setPlanId(subscriptions.get(i).getPlanId());
+            subscriptionDetailVo.setExpireTime(subscriptions.get(i).getExpireTime());
+            Plan plan = planService.getById(subscriptionDetailVo.getPlanId());
+            subscriptionDetailVo.setChannelId(plan.getChannelId());
+            subscriptionDetailVo.setAmount(plan.getAmount());
+            subscriptionDetailVo.setPlanName(plan.getName());
+            subscriptionDetailVo.setPlanIntroduction(plan.getIntroduction());
+            Channel channel = remoteChannelService.getChannelInfoInner(subscriptionDetailVo.getChannelId());
+            subscriptionDetailVo.setChannelName(channel.getName());
+            subscriptionDetailVo.setChannelIntroduction(channel.getIntroduction());
+            subscriptionDetailVo.setCreator_id(channel.getCreator_id());
+            subscriptionDetailVo.setImg(channel.getImg());
+            detailedSubs.add(subscriptionDetailVo);
+        }
+        return Result.success(detailedSubs);
     }
     @GetMapping("post")
     @ApiOperation("判断用户对某个动态是否有权限浏览")
