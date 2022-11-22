@@ -70,4 +70,10 @@ public class ChannelInfoController {
         return Result.success(planList);
     }
 
+    @GetMapping("getChannelInfoInner")
+    public Channel getChannelInfoInner(@RequestParam Long channelId) {
+        Channel channel = channelService.getById(channelId);
+        return channel;
+    }
+
 }
