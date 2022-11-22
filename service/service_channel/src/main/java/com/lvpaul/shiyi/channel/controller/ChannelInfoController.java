@@ -140,4 +140,10 @@ public class ChannelInfoController {
             return Result.error();
     }
 
+    @GetMapping("getChannelInfoInner")
+    public Channel getChannelInfoInner(@RequestParam Long channelId) {
+        Channel channel = channelService.getById(channelId);
+        return channel;
+    }
+
 }

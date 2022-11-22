@@ -56,6 +56,22 @@ public class UserInfoController {
             return Result.error().message("id不存在于数据库中");
         }
     }
+    @GetMapping("search")
+    public Result getUserInfo(@RequestParam(value = "user_id") Long userId){
+        User user = userService.getById(userId);
+        if(user!=null){
+            UserDetailVo userDetail = new UserDetailVo();
+            userDetail.setId(user.getId());
+            userDetail.setIscreator(user.isIscreator());
+            userDetail.setPhone(user.getPhone());
+            userDetail.setUsername(user.getUsername());
+            userDetail.setAvatar(user.getAvatar());
+            userDetail.setSignature(user.getSignature());
+            return Result.success(userDetail);
+        }else {
+            return Result.error().message("id不存在于数据库中");
+        }
+    }
     @PostMapping("avatar")
     public Result uploadAvatar(
             @ApiParam(name = "file", value = "文件", required = true)
