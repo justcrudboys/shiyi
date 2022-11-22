@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lvpaul.shiyi.pojo.entity.channel.Channel;
+import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.post.ChannelPlanPostRelation;
 import com.lvpaul.shiyi.pojo.entity.post.PostAttachment;
 import com.lvpaul.shiyi.pojo.entity.user.User;
@@ -129,5 +130,11 @@ public class PostController {
         wrapper.eq("post_id",postid);
         List<PostAttachment> paList = postAttachmentMapper.selectList(wrapper);
         return Result.success(paList);
+    }
+
+    @ApiOperation("返回一个post的频道的主人")
+    @GetMapping("planhost")
+    public Long planHost(@RequestParam Long postId){
+        return postService.getPostHost(postId);
     }
 }

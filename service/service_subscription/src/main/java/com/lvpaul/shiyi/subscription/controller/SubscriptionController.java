@@ -9,6 +9,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionRequestVo;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionDetailVo;
 import com.lvpaul.shiyi.subscription.rpc.RemoteChannelService;
+import com.lvpaul.shiyi.subscription.rpc.RemotePostService;
 import com.lvpaul.shiyi.subscription.service.ChannelPlanPostRelationService;
 import com.lvpaul.shiyi.subscription.service.PlanService;
 import com.lvpaul.shiyi.subscription.service.SubscriptionService;
@@ -35,6 +36,8 @@ public class SubscriptionController {
     PlanService planService;
     @Autowired
     RemoteChannelService remoteChannelService;
+    @Autowired
+    RemotePostService remotePostService;
     @GetMapping("list")
     @ApiOperation("通过id获取用户还生效的订阅")
     public Result getSubscriptionList(@RequestParam Long userId){
@@ -56,7 +59,7 @@ public class SubscriptionController {
             Channel channel = remoteChannelService.getChannelInfoInner(subscriptionDetailVo.getChannelId());
             subscriptionDetailVo.setChannelName(channel.getName());
             subscriptionDetailVo.setChannelIntroduction(channel.getIntroduction());
-            subscriptionDetailVo.setCreator_id(channel.getCreator_id());
+            subscriptionDetailVo.setCreator_id(channel.getCreatorId());
             subscriptionDetailVo.setImg(channel.getImg());
             detailedSubs.add(subscriptionDetailVo);
         }
@@ -66,6 +69,9 @@ public class SubscriptionController {
     @ApiOperation("判断用户对某个动态是否有权限浏览")
     public Result isPostValid (@RequestParam Long postId){
         Long userId =   Long.parseLong((String) StpUtil.getLoginId());
+        //先判断是不是创作者
+        if(userId==remotePostService.planHost(postId))
+            return Result.success(true);
         //找出该动态支持的方案
         QueryWrapper<ChannelPlanPostRelation> planWrapper = new QueryWrapper<>();
         planWrapper.eq("post_id",postId);
