@@ -1,10 +1,17 @@
 package com.lvpaul.shiyi.channel.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.mapper.TagRelationMapper;
 import com.lvpaul.shiyi.channel.service.TagRelationService;
+import com.lvpaul.shiyi.pojo.entity.channel.Plan;
+import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +23,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TagRelationServiceImpl extends ServiceImpl<TagRelationMapper, TagRelation> implements TagRelationService {
-
+    @Autowired
+    TagRelationMapper tagRelationMapper;
+    @Override
+    public List<TagRelation> getChannelTagRelation(Long channel_id){
+        QueryWrapper<TagRelation> qw = new QueryWrapper<>();
+        qw.eq("channel_id", channel_id);
+        List<TagRelation> tagRelationList = tagRelationMapper.selectList(qw);
+        return tagRelationList;
+    }
 }

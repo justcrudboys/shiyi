@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostService extends IService<Post> {
     public List<Post> getChannelPost(Long channel_id);
+
+    public Long getPostHost(Long postId);
 }

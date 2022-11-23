@@ -2,6 +2,7 @@ package com.lvpaul.shiyi.channel.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
+import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 
 /**
  * <p>
@@ -12,5 +13,4 @@ import com.lvpaul.shiyi.pojo.entity.channel.Tag;
  * @since 2022-11-17
  */
 public interface TagService extends IService<Tag> {
-
 }
