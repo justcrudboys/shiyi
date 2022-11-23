@@ -71,10 +71,17 @@ public class ChannelInfoController {
         channel.setIntroduction(introduction);
         channel.setCreatorId(creator_id);
         channel.setImg(img);
-        if(channelService.save(channel))
-            return Result.success();
-        else
+        if(!channelService.save(channel))
             return Result.error();
+        int[] tags = channelRequest.getTags();
+        TagRelation tagRelation = new TagRelation();
+        tagRelation.setChannelId(channel.getId());
+        for (int tag : tags) {
+            tagRelation.setTagId(tag);
+            if (!tagRelationService.save(tagRelation))
+                return Result.error();
+        }
+        return Result.success(channel);
     }
 
     @GetMapping("channelPlan")
