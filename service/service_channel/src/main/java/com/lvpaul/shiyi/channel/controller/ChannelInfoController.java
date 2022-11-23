@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,9 +143,32 @@ public class ChannelInfoController {
     }
 
     @GetMapping("getChannelInfoInner")
-    public Channel getChannelInfoInner(@RequestParam Long channelId) {
-        Channel channel = channelService.getById(channelId);
-        return channel;
+    public List<Map<String,Object>> getChannelInfoInner(@RequestParam List<Long> planIdList) {
+        List<Plan> planList = (List<Plan>) planService.listByIds(planIdList);
+        //System.out.println(planList.size());
+        List<Long> channelIdList = planList.stream().map(Plan::getChannelId).collect(Collectors.toList());
+        //System.out.println(channelIdList.size());
+        List<Channel> channelList = (List<Channel>) channelService.listByIds(channelIdList);
+        //System.out.println(channelList.size());
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for(int i = 0;i < planList.size();i++){
+            for(int j = 0;j < channelList.size();j++){
+                if(Objects.equals(planList.get(i).getChannelId(), channelList.get(j).getId())){
+                    Map<String,Object> result = new HashMap<>();
+                    result.put("planId", planList.get(i).getId());
+                    result.put("channelId",planList.get(i).getChannelId());
+                    result.put("amount",planList.get(i).getAmount());
+                    result.put("planName",planList.get(i).getName());
+                    result.put("planIntro",planList.get(i).getIntroduction());
+                    result.put("channelName",channelList.get(j).getName());
+                    result.put("channelIntro",channelList.get(j).getIntroduction());
+                    result.put("creatorId",channelList.get(j).getCreatorId());
+                    result.put("img",channelList.get(j).getImg());
+                    resultList.add(result);
+                }
+            }
+        }
+        return resultList;
     }
 
 }

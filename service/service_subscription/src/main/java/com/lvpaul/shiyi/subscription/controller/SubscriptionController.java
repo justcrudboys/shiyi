@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,22 +42,25 @@ public class SubscriptionController {
         //找出此时还在订阅期内的
         wrapper.eq("user_id",userId).ge("expire_time",LocalDateTime.now());
         List<Subscription> subscriptions = subscriptionService.list(wrapper);
+        if(subscriptions == null || subscriptions.size() == 0){
+            return Result.error().message("该用户没有有效的订阅");
+        }
+        List<Long> planIdList = subscriptions.stream().map(Subscription::getPlanId).collect(Collectors.toList());
+        List<Map<String,Object>> resultList = remoteChannelService.getChannelInfoInner(planIdList);
         List<SubscriptionDetailVo> detailedSubs = new ArrayList<>();
         for(int i = 0;i < subscriptions.size();i++){
             SubscriptionDetailVo subscriptionDetailVo = new SubscriptionDetailVo();
             subscriptionDetailVo.setUserId(subscriptions.get(i).getUserId());
             subscriptionDetailVo.setPlanId(subscriptions.get(i).getPlanId());
             subscriptionDetailVo.setExpireTime(subscriptions.get(i).getExpireTime());
-            Plan plan = planService.getById(subscriptionDetailVo.getPlanId());
-            subscriptionDetailVo.setChannelId(plan.getChannelId());
-            subscriptionDetailVo.setAmount(plan.getAmount());
-            subscriptionDetailVo.setPlanName(plan.getName());
-            subscriptionDetailVo.setPlanIntroduction(plan.getIntroduction());
-            Channel channel = remoteChannelService.getChannelInfoInner(subscriptionDetailVo.getChannelId());
-            subscriptionDetailVo.setChannelName(channel.getName());
-            subscriptionDetailVo.setChannelIntroduction(channel.getIntroduction());
-            subscriptionDetailVo.setCreator_id(channel.getCreatorId());
-            subscriptionDetailVo.setImg(channel.getImg());
+            subscriptionDetailVo.setChannelId(Long.valueOf((Integer) resultList.get(i).get("channelId")));
+            subscriptionDetailVo.setAmount((Integer) resultList.get(i).get("amount"));
+            subscriptionDetailVo.setPlanName((String) resultList.get(i).get("planName"));
+            subscriptionDetailVo.setPlanIntroduction((String) resultList.get(i).get("planIntro"));
+            subscriptionDetailVo.setChannelName((String) resultList.get(i).get("channelName"));
+            subscriptionDetailVo.setChannelIntroduction((String) resultList.get(i).get("channelIntro"));
+            subscriptionDetailVo.setCreator_id(Long.valueOf((Integer) resultList.get(i).get("creatorId")));
+            subscriptionDetailVo.setImg((String) resultList.get(i).get("img"));
             detailedSubs.add(subscriptionDetailVo);
         }
         return Result.success(detailedSubs);
