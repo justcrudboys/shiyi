@@ -17,6 +17,10 @@
         <module>service_user</module>
         <module>service_creator</module>
         <module>service_channel</module>
+        <module>service_post</module>
+        <module>service_order</module>
+        <module>service_subscription</module>
+        <module>service_wallet</module>
     </modules>
 
     <properties>

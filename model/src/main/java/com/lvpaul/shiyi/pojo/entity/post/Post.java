@@ -25,5 +25,21 @@ public class Post {
     @ApiModelProperty(value = "动态发布时间")
     @TableField("post_time")
     private String postTime;
+
+    @ApiModelProperty(value = "动态名字")
+    @TableField("post_name")
+    private String postName;
+
+    @ApiModelProperty(value = "作者id")
+    @TableField(exist = false)
+    private String authorId;
+
+    @ApiModelProperty(value = "作者名字")
+    @TableField(exist = false)
+    private String authorName;
+
+    @ApiModelProperty(value = "作者头像")
+    @TableField(exist = false)
+    private String authorAvatar;
 }
 
