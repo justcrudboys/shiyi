@@ -37,17 +37,17 @@ public class SubscriptionController {
     RemotePostService remotePostService;
     @GetMapping("list")
     @ApiOperation("通过id获取用户还生效的订阅")
-    public Result getSubscriptionList(@RequestParam Long userId){
+    public Result getSubscriptionList(@RequestParam(value = "user_id")Long userId){
         QueryWrapper<Subscription> wrapper = new QueryWrapper<>();
         //找出此时还在订阅期内的
         wrapper.eq("user_id",userId).ge("expire_time",LocalDateTime.now());
         List<Subscription> subscriptions = subscriptionService.list(wrapper);
+        List<SubscriptionDetailVo> detailedSubs = new ArrayList<>();
         if(subscriptions == null || subscriptions.size() == 0){
-            return Result.error().message("该用户没有有效的订阅");
+            return Result.success(detailedSubs);
         }
         List<Long> planIdList = subscriptions.stream().map(Subscription::getPlanId).collect(Collectors.toList());
         List<Map<String,Object>> resultList = remoteChannelService.getChannelInfoInner(planIdList);
-        List<SubscriptionDetailVo> detailedSubs = new ArrayList<>();
         for(int i = 0;i < subscriptions.size();i++){
             SubscriptionDetailVo subscriptionDetailVo = new SubscriptionDetailVo();
             subscriptionDetailVo.setUserId(subscriptions.get(i).getUserId());

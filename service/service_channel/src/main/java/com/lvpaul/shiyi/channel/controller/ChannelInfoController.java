@@ -12,6 +12,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
+import com.lvpaul.shiyi.pojo.vo.channel.ChannelDetailVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelPutRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
@@ -43,9 +44,26 @@ public class ChannelInfoController {
     TagService tagService;
     @GetMapping("mychannel")
     public Result MyChannel(@RequestParam(value = "creator_id")Long creator_id) {
-        //Long id = Long.parseLong((String)StpUtil.getLoginId());
         List<Channel> channelList = channelService.getCreatorChannel(creator_id);
-        return Result.success(channelList);
+        List<ChannelDetailVo> resultList = new ArrayList<>();
+        for(int i = 0;i < channelList.size();i++){
+            Long channelId = channelList.get(i).getId();
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channelId);
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+            ChannelDetailVo channelDetailVo = new ChannelDetailVo();
+            channelDetailVo.setId(channelList.get(i).getId());
+            channelDetailVo.setName(channelList.get(i).getName());
+            channelDetailVo.setIntroduction(channelList.get(i).getIntroduction());
+            channelDetailVo.setCreatorId(channelList.get(i).getCreatorId());
+            channelDetailVo.setImg(channelList.get(i).getImg());
+            channelDetailVo.setTagName(tagNameList);
+            resultList.add(channelDetailVo);
+        }
+        return Result.success(resultList);
     }
 
     @PostMapping("uploadImg")
