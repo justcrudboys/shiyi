@@ -24,5 +24,9 @@ public class ChannelCreateRequestVo {
     @ApiModelProperty(value = "创作者id")
     @TableField("creator_id")
     private Long creator_id;
+
+    @ApiModelProperty(value = "标签")
+    @TableField("tags")
+    private int[] tags;
 }
 
