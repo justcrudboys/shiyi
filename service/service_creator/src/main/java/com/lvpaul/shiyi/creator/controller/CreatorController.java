@@ -68,4 +68,18 @@ public class CreatorController {
         else
             return Result.error();
     }
+
+    @ApiOperation("修改支付宝账户")
+    @PutMapping("account")
+    public Result changeAccount(@RequestBody String account){
+        Long id =   Long.parseLong((String)StpUtil.getLoginId());
+        Creator creator = creatorService.getById(id);
+        if(creator==null)
+            return Result.error().message("不是创作者");
+        creator.setAccount(account);
+        if(creatorService.updateById(creator))
+            return Result.success();
+        else
+            return Result.error();
+    }
 }
