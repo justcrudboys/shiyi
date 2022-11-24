@@ -31,4 +31,8 @@ public class Channel {
     @TableField(value="img")
     private String img;
 
+    @ApiModelProperty(value = "频道浏览量")
+    @TableField(value="views")
+    private Long views;
+
 }
