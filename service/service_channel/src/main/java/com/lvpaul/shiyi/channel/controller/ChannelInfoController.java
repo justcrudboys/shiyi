@@ -2,6 +2,7 @@ package com.lvpaul.shiyi.channel.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
+import com.lvpaul.shiyi.channel.rpc.RemoteUserService;
 import com.lvpaul.shiyi.channel.service.ChannelService;
 import com.lvpaul.shiyi.channel.service.ImgService;
 import com.lvpaul.shiyi.channel.service.PlanService;
@@ -12,6 +13,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
+import com.lvpaul.shiyi.pojo.entity.user.User;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelDetailVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelPutRequestVo;
@@ -42,6 +44,10 @@ public class ChannelInfoController {
     TagRelationService tagRelationService;
     @Autowired
     TagService tagService;
+
+    @Autowired
+    RemoteUserService remoteUserService;
+
     @GetMapping("mychannel")
     public Result MyChannel(@RequestParam(value = "creator_id")Long creator_id) {
         List<Channel> channelList = channelService.getCreatorChannel(creator_id);
@@ -91,15 +97,19 @@ public class ChannelInfoController {
         channel.setImg(img);
         if(!channelService.save(channel))
             return Result.error();
-        int[] tags = channelRequest.getTags();
-        TagRelation tagRelation = new TagRelation();
-        tagRelation.setChannelId(channel.getId());
-        for (int tag : tags) {
-            tagRelation.setTagId(tag);
+        List<Integer> tags = channelRequest.getTags();
+        Long id = channel.getId();
+        System.out.println("该频道的id为"+id);
+        for (int i=0;i<tags.size();i++) {
+            TagRelation tagRelation = new TagRelation();
+            tagRelation.setChannelId(id);
+            tagRelation.setTagId(tags.get(i));
+            System.out.println("id为："+id+" 标签为："+tags.get(i));
             if (!tagRelationService.save(tagRelation))
                 return Result.error();
         }
         return Result.success(channel);
+
     }
 
     @GetMapping("channelPlan")
@@ -196,4 +206,14 @@ public class ChannelInfoController {
         return resultList;
     }
 
+    @GetMapping("getUserInfoByChannel")
+    public Result getUserInfoByChannel(@RequestParam Long channelId){
+        Channel channel = channelService.getById(channelId);
+        Long userId=channel.getCreatorId();
+        User user = remoteUserService.searchUser(userId);
+        if(user!=null)
+            return Result.success(user);
+        else
+            return Result.error();
+    }
 }
