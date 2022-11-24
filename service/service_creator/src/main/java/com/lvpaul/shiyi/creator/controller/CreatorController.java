@@ -76,15 +76,15 @@ public class CreatorController {
 
     @ApiOperation("根据名字查询创作者信息")
     @GetMapping("search")
-    public Result searchByName(@RequestParam String name){
+    public Result searchByName(@RequestParam String name) {
         List<User> userList = userService.getUserByName(name);
         List<CreatorDetailVo> creatorDetailVoList = new ArrayList<>();
-        if(userList == null || userList.size() == 0){
+        if (userList == null || userList.size() == 0) {
             return Result.success(creatorDetailVoList);
         }
         List<Long> userIdList = userList.stream().map(User::getId).collect(Collectors.toList());
         List<Creator> creatorList = (List<Creator>) creatorService.listByIds(userIdList);
-        for(int i = 0;i < creatorList.size();i++){
+        for (int i = 0; i < creatorList.size(); i++) {
             CreatorDetailVo creatorDetailVo = new CreatorDetailVo();
             creatorDetailVo.setId(userList.get(i).getId());
             creatorDetailVo.setUsername(userList.get(i).getUsername());
@@ -96,7 +96,7 @@ public class CreatorController {
         }
         return Result.success(creatorDetailVoList);
     }
-    
+
     @ApiOperation("修改支付宝账户")
     @PutMapping("account")
     public Result changeAccount(@RequestBody String account){
