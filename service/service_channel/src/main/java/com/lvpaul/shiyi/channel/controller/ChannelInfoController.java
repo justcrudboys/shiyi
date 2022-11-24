@@ -151,4 +151,11 @@ public class ChannelInfoController {
         else
             return Result.error().message("频道标签更新失败");
     }
+
+    @GetMapping("getChannelInfoInner")
+    public Channel getChannelInfoInner(@RequestParam Long channelId) {
+        Channel channel = channelService.getById(channelId);
+        return channel;
+    }
+	
 }
