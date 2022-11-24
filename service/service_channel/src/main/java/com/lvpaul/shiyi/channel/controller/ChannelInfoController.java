@@ -188,5 +188,21 @@ public class ChannelInfoController {
         }
         return resultList;
     }
-
+    @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于订单创建界面")
+    @GetMapping("planDetail")
+    public Result getPlanDetail(@RequestParam Long planId){
+        Plan plan = planService.getById(planId);
+        if(plan==null)
+            return Result.error().message("赞助方案不存在");
+        Channel channel = channelService.getById(plan.getChannelId());
+        if(channel==null)
+            return Result.error().message("频道不存在");
+        Map<String,Object> planDetail = new HashMap<>();
+        planDetail.put("planId",plan.getId());
+        planDetail.put("amount",plan.getAmount());
+        planDetail.put("name",plan.getName());
+        planDetail.put("channelName",channel.getName());
+        planDetail.put("introduction",channel.getIntroduction());
+        return Result.success(planDetail);
+    }
 }
