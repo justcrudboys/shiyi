@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ChannelDetailVo {
 
@@ -19,5 +21,12 @@ public class ChannelDetailVo {
     private String introduction;
 
     @ApiModelProperty(value = "创作者id")
-    private Long creator_id;
+    private Long creatorId;
+
+    @ApiModelProperty(value = "频道图片")
+    private String img;
+
+    @ApiModelProperty(value = "频道分类")
+    private List<String> tagName;
+
 }

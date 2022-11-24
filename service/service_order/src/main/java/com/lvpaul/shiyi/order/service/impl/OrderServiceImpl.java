@@ -1,14 +1,16 @@
 package com.lvpaul.shiyi.order.service.impl;
 
 import com.lvpaul.shiyi.order.mapper.OrderMapper;
+import com.lvpaul.shiyi.order.rpc.RemoteChannelService;
 import com.lvpaul.shiyi.order.service.OrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lvpaul.shiyi.pojo.entity.order.Order;
 import com.lvpaul.shiyi.pojo.vo.order.OrderDetailVo;
+import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionDetailVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,12 +23,31 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+    @Autowired
+    RemoteChannelService remoteChannelService;
     public List<OrderDetailVo> getDetailList(List<Order> orderList){
-        List<OrderDetailVo> orderDetailVoList = orderList.stream().map(res-> new OrderDetailVo(
-                res.getId(), res.getUserId(), "频道名字", res.getPlanId(),
-                "方案名字",66, res.getSubscribeMonth(),
-                res.getMoneyAmount(), res.getStatus()
-        )).collect(Collectors.toList());
+        List<Long> planIdList = orderList.stream().map(Order::getPlanId).collect(Collectors.toList());
+        List<Map<String,Object>> planDetailList = remoteChannelService.getChannelInfoInner(planIdList);
+        List<OrderDetailVo> orderDetailVoList = new ArrayList<>();
+        Iterator<Order> orderIterator = orderList.iterator();
+        while (orderIterator.hasNext()){
+            Order order = orderIterator.next();
+            Iterator<Map<String,Object>> planDetailIteretor = planDetailList.iterator();
+            while(planDetailIteretor.hasNext()){
+                Map<String,Object> planDetail = planDetailIteretor.next();
+                Long orderPlanId = order.getPlanId();
+                Long detailPlanId = Long.valueOf(planDetail.get("planId").toString());
+                if(orderPlanId.equals(detailPlanId)){
+                    OrderDetailVo orderDetailVo = new OrderDetailVo(
+                            order.getId(),order.getUserId(),(String)planDetail.get("channelName"),
+                            order.getPlanId(),(String)planDetail.get("planName"),
+                            (Integer) planDetail.get("amount"),
+                            order.getSubscribeMonth(),order.getMoneyAmount(),order.getStatus()
+                    );
+                    orderDetailVoList.add(orderDetailVo);
+                }
+            }
+        }
         return orderDetailVoList;
     }
 }

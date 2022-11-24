@@ -9,6 +9,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionRequestVo;
 import com.lvpaul.shiyi.pojo.vo.subscription.SubscriptionDetailVo;
 import com.lvpaul.shiyi.subscription.rpc.RemoteChannelService;
+import com.lvpaul.shiyi.subscription.rpc.RemotePostService;
 import com.lvpaul.shiyi.subscription.service.ChannelPlanPostRelationService;
 import com.lvpaul.shiyi.subscription.service.PlanService;
 import com.lvpaul.shiyi.subscription.service.SubscriptionService;
@@ -18,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,29 +33,34 @@ public class SubscriptionController {
     PlanService planService;
     @Autowired
     RemoteChannelService remoteChannelService;
+    @Autowired
+    RemotePostService remotePostService;
     @GetMapping("list")
     @ApiOperation("通过id获取用户还生效的订阅")
-    public Result getSubscriptionList(@RequestParam Long userId){
+    public Result getSubscriptionList(@RequestParam(value = "user_id")Long userId){
         QueryWrapper<Subscription> wrapper = new QueryWrapper<>();
         //找出此时还在订阅期内的
         wrapper.eq("user_id",userId).ge("expire_time",LocalDateTime.now());
         List<Subscription> subscriptions = subscriptionService.list(wrapper);
         List<SubscriptionDetailVo> detailedSubs = new ArrayList<>();
+        if(subscriptions == null || subscriptions.size() == 0){
+            return Result.success(detailedSubs);
+        }
+        List<Long> planIdList = subscriptions.stream().map(Subscription::getPlanId).collect(Collectors.toList());
+        List<Map<String,Object>> resultList = remoteChannelService.getChannelInfoInner(planIdList);
         for(int i = 0;i < subscriptions.size();i++){
             SubscriptionDetailVo subscriptionDetailVo = new SubscriptionDetailVo();
             subscriptionDetailVo.setUserId(subscriptions.get(i).getUserId());
             subscriptionDetailVo.setPlanId(subscriptions.get(i).getPlanId());
             subscriptionDetailVo.setExpireTime(subscriptions.get(i).getExpireTime());
-            Plan plan = planService.getById(subscriptionDetailVo.getPlanId());
-            subscriptionDetailVo.setChannelId(plan.getChannelId());
-            subscriptionDetailVo.setAmount(plan.getAmount());
-            subscriptionDetailVo.setPlanName(plan.getName());
-            subscriptionDetailVo.setPlanIntroduction(plan.getIntroduction());
-            Channel channel = remoteChannelService.getChannelInfoInner(subscriptionDetailVo.getChannelId());
-            subscriptionDetailVo.setChannelName(channel.getName());
-            subscriptionDetailVo.setChannelIntroduction(channel.getIntroduction());
-            subscriptionDetailVo.setCreator_id(channel.getCreator_id());
-            subscriptionDetailVo.setImg(channel.getImg());
+            subscriptionDetailVo.setChannelId(Long.valueOf((Integer) resultList.get(i).get("channelId")));
+            subscriptionDetailVo.setAmount((Integer) resultList.get(i).get("amount"));
+            subscriptionDetailVo.setPlanName((String) resultList.get(i).get("planName"));
+            subscriptionDetailVo.setPlanIntroduction((String) resultList.get(i).get("planIntro"));
+            subscriptionDetailVo.setChannelName((String) resultList.get(i).get("channelName"));
+            subscriptionDetailVo.setChannelIntroduction((String) resultList.get(i).get("channelIntro"));
+            subscriptionDetailVo.setCreator_id(Long.valueOf((Integer) resultList.get(i).get("creatorId")));
+            subscriptionDetailVo.setImg((String) resultList.get(i).get("img"));
             detailedSubs.add(subscriptionDetailVo);
         }
         return Result.success(detailedSubs);
@@ -66,6 +69,9 @@ public class SubscriptionController {
     @ApiOperation("判断用户对某个动态是否有权限浏览")
     public Result isPostValid (@RequestParam Long postId){
         Long userId =   Long.parseLong((String) StpUtil.getLoginId());
+        //先判断是不是创作者
+        if(userId==remotePostService.planHost(postId))
+            return Result.success(true);
         //找出该动态支持的方案
         QueryWrapper<ChannelPlanPostRelation> planWrapper = new QueryWrapper<>();
         planWrapper.eq("post_id",postId);

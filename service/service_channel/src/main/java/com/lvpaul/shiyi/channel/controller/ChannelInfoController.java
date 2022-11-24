@@ -12,6 +12,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
+import com.lvpaul.shiyi.pojo.vo.channel.ChannelDetailVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelPutRequestVo;
 import com.lvpaul.shiyi.pojo.vo.channel.ChannelPlanCreateRequestVo;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,9 +45,26 @@ public class ChannelInfoController {
     TagService tagService;
     @GetMapping("mychannel")
     public Result MyChannel(@RequestParam(value = "creator_id")Long creator_id) {
-        //Long id = Long.parseLong((String)StpUtil.getLoginId());
         List<Channel> channelList = channelService.getCreatorChannel(creator_id);
-        return Result.success(channelList);
+        List<ChannelDetailVo> resultList = new ArrayList<>();
+        for(int i = 0;i < channelList.size();i++){
+            Long channelId = channelList.get(i).getId();
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channelId);
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+            ChannelDetailVo channelDetailVo = new ChannelDetailVo();
+            channelDetailVo.setId(channelList.get(i).getId());
+            channelDetailVo.setName(channelList.get(i).getName());
+            channelDetailVo.setIntroduction(channelList.get(i).getIntroduction());
+            channelDetailVo.setCreatorId(channelList.get(i).getCreatorId());
+            channelDetailVo.setImg(channelList.get(i).getImg());
+            channelDetailVo.setTagName(tagNameList);
+            resultList.add(channelDetailVo);
+        }
+        return Result.success(resultList);
     }
 
     @PostMapping("uploadImg")
@@ -153,9 +173,48 @@ public class ChannelInfoController {
     }
 
     @GetMapping("getChannelInfoInner")
-    public Channel getChannelInfoInner(@RequestParam Long channelId) {
-        Channel channel = channelService.getById(channelId);
-        return channel;
+    public List<Map<String,Object>> getChannelInfoInner(@RequestParam List<Long> planIdList) {
+        List<Plan> planList = (List<Plan>) planService.listByIds(planIdList);
+        //System.out.println(planList.size());
+        List<Long> channelIdList = planList.stream().map(Plan::getChannelId).collect(Collectors.toList());
+        //System.out.println(channelIdList.size());
+        List<Channel> channelList = (List<Channel>) channelService.listByIds(channelIdList);
+        //System.out.println(channelList.size());
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        for(int i = 0;i < planList.size();i++){
+            for(int j = 0;j < channelList.size();j++){
+                if(Objects.equals(planList.get(i).getChannelId(), channelList.get(j).getId())){
+                    Map<String,Object> result = new HashMap<>();
+                    result.put("planId", planList.get(i).getId());
+                    result.put("channelId",planList.get(i).getChannelId());
+                    result.put("amount",planList.get(i).getAmount());
+                    result.put("planName",planList.get(i).getName());
+                    result.put("planIntro",planList.get(i).getIntroduction());
+                    result.put("channelName",channelList.get(j).getName());
+                    result.put("channelIntro",channelList.get(j).getIntroduction());
+                    result.put("creatorId",channelList.get(j).getCreatorId());
+                    result.put("img",channelList.get(j).getImg());
+                    resultList.add(result);
+                }
+            }
+        }
+        return resultList;
     }
-	
+    @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于订单创建界面")
+    @GetMapping("planDetail")
+    public Result getPlanDetail(@RequestParam Long planId){
+        Plan plan = planService.getById(planId);
+        if(plan==null)
+            return Result.error().message("赞助方案不存在");
+        Channel channel = channelService.getById(plan.getChannelId());
+        if(channel==null)
+            return Result.error().message("频道不存在");
+        Map<String,Object> planDetail = new HashMap<>();
+        planDetail.put("planId",plan.getId());
+        planDetail.put("amount",plan.getAmount());
+        planDetail.put("name",plan.getName());
+        planDetail.put("channelName",channel.getName());
+        planDetail.put("introduction",channel.getIntroduction());
+        return Result.success(planDetail);
+    }
 }

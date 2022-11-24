@@ -1,7 +1,5 @@
-package com.lvpaul.shiyi.subscription.rpc;
+package com.lvpaul.shiyi.order.rpc;
 
-import com.lvpaul.shiyi.utils.result.Result;
-import com.lvpaul.shiyi.pojo.entity.channel.Channel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
