@@ -29,7 +29,7 @@ public class TagRelation implements Serializable {
     private static final long serialVersionUID=1L;
 
     @ApiModelProperty(value = "频道id")
-      @TableId(value = "channel_id", type = IdType.AUTO)
+    @TableField(value = "channel_id")
     private Long channelId;
 
     @ApiModelProperty(value = "标签id")
