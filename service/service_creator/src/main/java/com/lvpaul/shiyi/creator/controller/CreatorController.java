@@ -5,10 +5,15 @@ import com.lvpaul.shiyi.creator.service.CreatorService;
 import com.lvpaul.shiyi.creator.service.UserService;
 import com.lvpaul.shiyi.pojo.entity.creator.Creator;
 import com.lvpaul.shiyi.pojo.entity.user.User;
+import com.lvpaul.shiyi.pojo.vo.creator.CreatorDetailVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/creator")
@@ -67,6 +72,29 @@ public class CreatorController {
             return Result.success();
         else
             return Result.error();
+    }
+
+    @ApiOperation("根据名字查询创作者信息")
+    @GetMapping("search")
+    public Result searchByName(@RequestParam String name) {
+        List<User> userList = userService.getUserByName(name);
+        List<CreatorDetailVo> creatorDetailVoList = new ArrayList<>();
+        if (userList == null || userList.size() == 0) {
+            return Result.success(creatorDetailVoList);
+        }
+        List<Long> userIdList = userList.stream().map(User::getId).collect(Collectors.toList());
+        List<Creator> creatorList = (List<Creator>) creatorService.listByIds(userIdList);
+        for (int i = 0; i < creatorList.size(); i++) {
+            CreatorDetailVo creatorDetailVo = new CreatorDetailVo();
+            creatorDetailVo.setId(userList.get(i).getId());
+            creatorDetailVo.setUsername(userList.get(i).getUsername());
+            creatorDetailVo.setPhone(userList.get(i).getPhone());
+            creatorDetailVo.setAvatar(userList.get(i).getAvatar());
+            creatorDetailVo.setSignature(userList.get(i).getSignature());
+            creatorDetailVo.setIntroduction(creatorList.get(i).getIntroduction());
+            creatorDetailVoList.add(creatorDetailVo);
+        }
+        return Result.success(creatorDetailVoList);
     }
 
     @ApiOperation("修改支付宝账户")
