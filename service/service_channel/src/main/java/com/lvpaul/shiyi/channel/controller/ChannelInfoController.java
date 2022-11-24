@@ -219,14 +219,15 @@ public class ChannelInfoController {
     }
 
     @GetMapping("getUserInfoByChannel")
-    public Result getUserInfoByChannel(@RequestParam Long channelId){
+    public Result getUserInfoByChannel(@RequestParam Long channelId) {
         Channel channel = channelService.getById(channelId);
-        Long userId=channel.getCreatorId();
+        Long userId = channel.getCreatorId();
         User user = remoteUserService.searchUser(userId);
-        if(user!=null)
+        if (user != null)
             return Result.success(user);
         else
             return Result.error();
+    }    
     @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于订单创建界面")
     @GetMapping("planDetail")
     public Result getPlanDetail(@RequestParam Long planId){
