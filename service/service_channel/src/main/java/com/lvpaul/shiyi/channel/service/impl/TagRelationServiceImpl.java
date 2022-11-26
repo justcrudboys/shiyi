@@ -36,12 +36,12 @@ public class TagRelationServiceImpl extends ServiceImpl<TagRelationMapper, TagRe
     }
 
     @Override
-    public List<TagRelation> channelByTagId(Long tag_id){
+    public List<TagRelation> channelByTagId(Long tag_id) {
         QueryWrapper<TagRelation> qw = new QueryWrapper<>();
         qw.eq("tag_id", tag_id);
         List<TagRelation> tagRelationList = tagRelationMapper.selectList(qw);
         return tagRelationList;
-
+    }
     public Boolean updateOneChannelTagRelation(List<TagRelation> tagRelationList) {
         for (int i=0;i<tagRelationList.size();i++) {
             TagRelation tagRelation = tagRelationList.get(i);
