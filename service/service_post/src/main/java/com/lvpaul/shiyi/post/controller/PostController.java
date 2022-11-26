@@ -112,6 +112,15 @@ public class PostController {
         return Result.success(postList);
     }
 
+
+    @ApiOperation("获取动态和赞助方案")
+    @GetMapping("getPostAndPlan")
+    public Result getPostAndPlan(@RequestParam(value = "channel_id")Long channel_id){
+        List<Map<String,Object>> ObjectList = channelPlanPostRelationService.getPostPlan(channel_id);
+        return Result.success(ObjectList);
+    }
+
+
     @GetMapping("getPostById")
     public Result getPostById(@RequestParam(value = "post_id")String post_id){
         Long postid = Long.parseLong(post_id);

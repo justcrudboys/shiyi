@@ -248,4 +248,11 @@ public class ChannelInfoController {
         planDetail.put("introduction",channel.getIntroduction());
         return Result.success(planDetail);
     }
+
+    @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于频道动态列表界面")
+    @GetMapping("getPlan")
+    public Plan getPlan(@RequestParam Long planId){
+        Plan plan = planService.getById(planId);
+        return plan;
+    }
 }
