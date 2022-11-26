@@ -1,6 +1,8 @@
 package com.lvpaul.shiyi.channel.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.rpc.RemoteUserService;
 import com.lvpaul.shiyi.channel.service.ChannelService;
@@ -13,15 +15,14 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
+
+import com.lvpaul.shiyi.pojo.vo.channel.*;
 import com.lvpaul.shiyi.pojo.entity.user.User;
-import com.lvpaul.shiyi.pojo.vo.channel.ChannelDetailVo;
-import com.lvpaul.shiyi.pojo.vo.channel.ChannelCreateRequestVo;
-import com.lvpaul.shiyi.pojo.vo.channel.ChannelPutRequestVo;
-import com.lvpaul.shiyi.pojo.vo.channel.ChannelPlanCreateRequestVo;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -249,10 +250,99 @@ public class ChannelInfoController {
         return Result.success(planDetail);
     }
 
+
     @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于频道动态列表界面")
     @GetMapping("getPlan")
     public Plan getPlan(@RequestParam Long planId){
         Plan plan = planService.getById(planId);
         return plan;
+    }
+
+    @GetMapping("channelByTagId")
+    public Result channelByTagId(@RequestParam(value = "tag_id")Long tag_id) {
+
+        List<TagRelation> tagRelations = tagRelationService.channelByTagId(tag_id);
+        List<ChannelByTagIdVo> resultList = new ArrayList<>();
+        for(int i = 0;i<tagRelations.size();i++){
+            Channel channel = channelService.getById(tagRelations.get(i).getChannelId());
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channel.getId());
+
+            //获得所有频道标签
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+
+            ChannelByTagIdVo channelByTagIdVo = new ChannelByTagIdVo();
+            channelByTagIdVo.setId(channel.getId());
+            channelByTagIdVo.setViews(channel.getViews());
+            channelByTagIdVo.setIntroduction(channel.getIntroduction());
+            channelByTagIdVo.setImg(channel.getImg());
+            channelByTagIdVo.setName(channel.getName());
+            channelByTagIdVo.setCreatorId(channel.getCreatorId());
+            channelByTagIdVo.setTagNames(tagNameList);
+            resultList.add(channelByTagIdVo);
+        }
+        return Result.success(resultList);
+    }
+
+    @GetMapping("channelSearch")
+    public Result channelSearch(@RequestParam String key) {
+        List<ChannelSearchVo> resultList = new ArrayList<>();
+        List<Channel> channels = channelService.channelSearch(key);
+
+        for(int i = 0;i<channels.size();i++){
+            Channel channel = channels.get(i);
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channel.getId());
+
+            //获得所有频道标签
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+
+            ChannelSearchVo channelSearchVo = new ChannelSearchVo();
+            channelSearchVo.setId(channel.getId());
+            channelSearchVo.setViews(channel.getViews());
+            channelSearchVo.setIntroduction(channel.getIntroduction());
+            channelSearchVo.setImg(channel.getImg());
+            channelSearchVo.setName(channel.getName());
+            channelSearchVo.setCreatorId(channel.getCreatorId());
+            channelSearchVo.setTagNames(tagNameList);
+            resultList.add(channelSearchVo);
+        }
+        return Result.success(resultList);
+    }
+
+    @GetMapping("recommend")
+    public Result channelByRecommend() {
+
+        List<ChannelSearchVo> resultList = new ArrayList<>();
+        List<Channel> channels = channelService.recommendChannel();
+
+        for(int i = 0;i<channels.size();i++){
+            Channel channel = channels.get(i);
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channel.getId());
+
+            //获得所有频道标签
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+
+            ChannelSearchVo channelSearchVo = new ChannelSearchVo();
+            channelSearchVo.setId(channel.getId());
+            channelSearchVo.setViews(channel.getViews());
+            channelSearchVo.setIntroduction(channel.getIntroduction());
+            channelSearchVo.setImg(channel.getImg());
+            channelSearchVo.setName(channel.getName());
+            channelSearchVo.setCreatorId(channel.getCreatorId());
+            channelSearchVo.setTagNames(tagNameList);
+            resultList.add(channelSearchVo);
+        }
+        return Result.success(resultList);
     }
 }

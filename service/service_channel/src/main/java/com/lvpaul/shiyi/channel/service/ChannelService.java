@@ -9,5 +9,8 @@ public interface ChannelService extends IService<Channel> {
 
     public List<Channel> getCreatorChannel(Long creator_id);
 
+    public List<Channel> channelSearch(String key);
+    public List<Channel> recommendChannel();
+
     public boolean isNameValidate(String name,Long creator_id);
 }
