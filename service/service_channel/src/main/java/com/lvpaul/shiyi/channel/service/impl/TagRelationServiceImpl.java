@@ -12,6 +12,7 @@ import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,5 +41,19 @@ public class TagRelationServiceImpl extends ServiceImpl<TagRelationMapper, TagRe
         qw.eq("tag_id", tag_id);
         List<TagRelation> tagRelationList = tagRelationMapper.selectList(qw);
         return tagRelationList;
+
+    public Boolean updateOneChannelTagRelation(List<TagRelation> tagRelationList) {
+        for (int i=0;i<tagRelationList.size();i++) {
+            TagRelation tagRelation = tagRelationList.get(i);
+            if (i==0) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("channel_id", tagRelation.getChannelId());
+                int sum = tagRelationMapper.deleteByMap(map);
+            }
+            if(tagRelationMapper.insert(tagRelation)!=1)
+                return false;
+        }
+        return true;
+
     }
 }

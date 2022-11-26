@@ -72,6 +72,13 @@ public class UserInfoController {
             return Result.error().message("id不存在于数据库中");
         }
     }
+
+    @GetMapping("searchInfo")
+    public User searchUser(@RequestParam(value = "user_id") Long userId){
+        User user = userService.getById(userId);
+        return user;
+    }
+
     @PostMapping("avatar")
     public Result uploadAvatar(
             @ApiParam(name = "file", value = "文件", required = true)

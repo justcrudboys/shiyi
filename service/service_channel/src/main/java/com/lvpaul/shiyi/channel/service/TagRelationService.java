@@ -18,4 +18,7 @@ public interface TagRelationService extends IService<TagRelation> {
     public List<TagRelation> getChannelTagRelation(Long channelId);
 
     public List<TagRelation> channelByTagId(Long tagId);
+
+    public Boolean updateOneChannelTagRelation(List<TagRelation> tagRelationList);
+
 }

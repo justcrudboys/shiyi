@@ -2,6 +2,7 @@ package com.lvpaul.shiyi.channel.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
+import com.lvpaul.shiyi.channel.rpc.RemoteUserService;
 import com.lvpaul.shiyi.channel.service.ChannelService;
 import com.lvpaul.shiyi.channel.service.ImgService;
 import com.lvpaul.shiyi.channel.service.PlanService;
@@ -12,7 +13,9 @@ import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.post.Post;
+
 import com.lvpaul.shiyi.pojo.vo.channel.*;
+import com.lvpaul.shiyi.pojo.entity.user.User;
 import com.lvpaul.shiyi.utils.result.Result;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,6 +44,10 @@ public class ChannelInfoController {
     TagRelationService tagRelationService;
     @Autowired
     TagService tagService;
+
+    @Autowired
+    RemoteUserService remoteUserService;
+
     @GetMapping("mychannel")
     public Result MyChannel(@RequestParam(value = "creator_id")Long creator_id) {
         List<Channel> channelList = channelService.getCreatorChannel(creator_id);
@@ -88,10 +95,21 @@ public class ChannelInfoController {
         channel.setIntroduction(introduction);
         channel.setCreatorId(creator_id);
         channel.setImg(img);
-        if(channelService.save(channel))
-            return Result.success();
-        else
+        if(!channelService.save(channel))
             return Result.error();
+        List<Integer> tags = channelRequest.getTags();
+        Long id = channel.getId();
+        System.out.println("该频道的id为"+id);
+        for (int i=0;i<tags.size();i++) {
+            TagRelation tagRelation = new TagRelation();
+            tagRelation.setChannelId(id);
+            tagRelation.setTagId(tags.get(i));
+            System.out.println("id为："+id+" 标签为："+tags.get(i));
+            if (!tagRelationService.save(tagRelation))
+                return Result.error();
+        }
+        return Result.success(channel);
+
     }
 
     @GetMapping("channelPlan")
@@ -112,10 +130,7 @@ public class ChannelInfoController {
     @GetMapping("getChannelTagRelation")
     public Result getChannelTagRelation(@RequestParam(value = "channel_id")Long channelId) {
         List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channelId);
-        if (tagRelationList.size()!=0)
-            return Result.success(tagRelationList);
-        else
-            return Result.error().message("该频道标签关系不存在");
+        return Result.success(tagRelationList);
     }
     @ApiOperation("返回当前标签的名称")
     @GetMapping("getTagName")
@@ -135,10 +150,7 @@ public class ChannelInfoController {
             Tag tag = tagService.getById(tagRelationList.get(i).getTagId());
             tagNameList.add(tag);
         }
-        if (tagNameList.size()!=0)
-            return Result.success(tagNameList);
-        else
-            return Result.error().message("该频道不存在标签");
+        return Result.success(tagNameList);
     }
     @ApiOperation("修改当前频道的信息")
     @PutMapping("putChannelInfo")
@@ -154,9 +166,26 @@ public class ChannelInfoController {
         channel.setCreatorId(channel.getCreatorId());
         channel.setImg(img);
         if(channelService.updateById(channel))
-            return Result.success();
+            return Result.success().message("修改频道信息成功");
         else
-            return Result.error();
+            return Result.error().message("修改频道信息失败");
+    }
+    @ApiOperation("新建当前频道的赞助计划")
+    @PostMapping("createChannelPlan")
+    public Result createChannelPlan(@RequestBody ChannelPlanCreateRequestVo channelPlanRequest){
+        if(planService.createChannelPlan(channelPlanRequest))
+            return Result.success().message("新建赞助计划成功");
+        else
+            return Result.error().message("新建赞助计划失败");
+    }
+
+    @ApiOperation("更新当前频道的标签")
+    @PostMapping("updateOneChannelTagRelation")
+    public Result updateOneChannelTag(@RequestBody List<TagRelation> tagRelationList){
+        if(tagRelationService.updateOneChannelTagRelation(tagRelationList))
+            return Result.success().message("频道标签更新成功");
+        else
+            return Result.error().message("频道标签更新失败");
     }
 
     @GetMapping("getChannelInfoInner")
@@ -186,6 +215,20 @@ public class ChannelInfoController {
             }
         }
         return resultList;
+    }
+
+    @GetMapping("getUserInfoByChannel")
+    public Result getUserInfoByChannel(@RequestParam Long channelId) {
+        Channel channel = channelService.getById(channelId);
+        Long views = channel.getViews();
+        channel.setViews(views+1);
+        channelService.updateById(channel);
+        Long userId = channel.getCreatorId();
+        User user = remoteUserService.searchUser(userId);
+        if (user != null)
+            return Result.success(user);
+        else
+            return Result.error();
     }
     @ApiOperation("根据planId返回plan信息，带有部分频道信息，用于订单创建界面")
     @GetMapping("planDetail")

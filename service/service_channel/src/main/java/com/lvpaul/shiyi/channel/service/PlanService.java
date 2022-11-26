@@ -2,6 +2,8 @@ package com.lvpaul.shiyi.channel.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lvpaul.shiyi.pojo.entity.channel.Plan;
+import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
+import com.lvpaul.shiyi.pojo.vo.channel.ChannelPlanCreateRequestVo;
 
 import java.util.List;
 
@@ -15,5 +17,5 @@ import java.util.List;
  */
 public interface PlanService extends IService<Plan> {
     public List<Plan> getChannelPlan(Long channelId);
-
+    public Boolean createChannelPlan(ChannelPlanCreateRequestVo channelPlanRequest);
 }

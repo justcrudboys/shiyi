@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 public class ChannelCreateRequestVo {
 
@@ -24,5 +26,9 @@ public class ChannelCreateRequestVo {
     @ApiModelProperty(value = "创作者id")
     @TableField("creator_id")
     private Long creator_id;
+
+    @ApiModelProperty(value = "标签")
+    @TableField("tags")
+    private ArrayList<Integer> tags;
 }
 
