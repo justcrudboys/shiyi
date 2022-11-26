@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.mapper.TagRelationMapper;
 import com.lvpaul.shiyi.channel.service.TagRelationService;
+import com.lvpaul.shiyi.pojo.entity.channel.Channel;
 import com.lvpaul.shiyi.pojo.entity.channel.Plan;
 import com.lvpaul.shiyi.pojo.entity.channel.Tag;
 import com.lvpaul.shiyi.pojo.entity.channel.TagRelation;
@@ -29,6 +30,14 @@ public class TagRelationServiceImpl extends ServiceImpl<TagRelationMapper, TagRe
     public List<TagRelation> getChannelTagRelation(Long channel_id){
         QueryWrapper<TagRelation> qw = new QueryWrapper<>();
         qw.eq("channel_id", channel_id);
+        List<TagRelation> tagRelationList = tagRelationMapper.selectList(qw);
+        return tagRelationList;
+    }
+
+    @Override
+    public List<TagRelation> channelByTagId(Long tag_id){
+        QueryWrapper<TagRelation> qw = new QueryWrapper<>();
+        qw.eq("tag_id", tag_id);
         List<TagRelation> tagRelationList = tagRelationMapper.selectList(qw);
         return tagRelationList;
     }
