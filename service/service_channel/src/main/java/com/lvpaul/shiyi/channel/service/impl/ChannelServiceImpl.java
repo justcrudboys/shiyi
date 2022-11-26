@@ -1,5 +1,6 @@
 package com.lvpaul.shiyi.channel.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lvpaul.shiyi.pojo.entity.channel.Channel;
 import com.lvpaul.shiyi.channel.mapper.ChannelMapper;
 import com.lvpaul.shiyi.channel.service.ChannelService;
@@ -29,6 +30,15 @@ public class ChannelServiceImpl extends ServiceImpl<ChannelMapper, Channel> impl
         qw.like(!StringUtils.isEmpty(key), "name", key);
         List<Channel> channelList = channelMapper.selectList(qw);
         return channelList;
+    }
+
+    @Override
+    public List<Channel> recommendChannel() {
+        QueryWrapper<Channel> qw = new QueryWrapper<>();
+        qw.orderByDesc("views");
+        Page<Channel> channelPage = new Page<>(1,10);//查询前10条
+        channelMapper.selectPage(channelPage,qw);
+        return channelPage.getRecords();
     }
 
     @Override

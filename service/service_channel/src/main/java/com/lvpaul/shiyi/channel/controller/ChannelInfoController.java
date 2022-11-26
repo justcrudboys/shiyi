@@ -1,6 +1,8 @@
 package com.lvpaul.shiyi.channel.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lvpaul.shiyi.channel.mapper.PlanMapper;
 import com.lvpaul.shiyi.channel.rpc.RemoteUserService;
 import com.lvpaul.shiyi.channel.service.ChannelService;
@@ -281,6 +283,36 @@ public class ChannelInfoController {
     public Result channelSearch(@RequestParam String key) {
         List<ChannelSearchVo> resultList = new ArrayList<>();
         List<Channel> channels = channelService.channelSearch(key);
+
+        for(int i = 0;i<channels.size();i++){
+            Channel channel = channels.get(i);
+            List<TagRelation> tagRelationList = tagRelationService.getChannelTagRelation(channel.getId());
+
+            //获得所有频道标签
+            List<String> tagNameList = new ArrayList<>();
+            for(int j = 0;j < tagRelationList.size();j++){
+                Tag tag = tagService.getById(tagRelationList.get(j).getTagId());
+                tagNameList.add(tag.getName());
+            }
+
+            ChannelSearchVo channelSearchVo = new ChannelSearchVo();
+            channelSearchVo.setId(channel.getId());
+            channelSearchVo.setViews(channel.getViews());
+            channelSearchVo.setIntroduction(channel.getIntroduction());
+            channelSearchVo.setImg(channel.getImg());
+            channelSearchVo.setName(channel.getName());
+            channelSearchVo.setCreatorId(channel.getCreatorId());
+            channelSearchVo.setTagNames(tagNameList);
+            resultList.add(channelSearchVo);
+        }
+        return Result.success(resultList);
+    }
+
+    @GetMapping("recommend")
+    public Result channelByRecommend() {
+
+        List<ChannelSearchVo> resultList = new ArrayList<>();
+        List<Channel> channels = channelService.recommendChannel();
 
         for(int i = 0;i<channels.size();i++){
             Channel channel = channels.get(i);
