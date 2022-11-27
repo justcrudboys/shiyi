@@ -26,9 +26,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     RemoteChannelService remoteChannelService;
     public List<OrderDetailVo> getDetailList(List<Order> orderList){
+        List<OrderDetailVo> orderDetailVoList = new ArrayList<>();
+        if(orderList.size()==0)
+            return orderDetailVoList;
         List<Long> planIdList = orderList.stream().map(Order::getPlanId).collect(Collectors.toList());
         List<Map<String,Object>> planDetailList = remoteChannelService.getChannelInfoInner(planIdList);
-        List<OrderDetailVo> orderDetailVoList = new ArrayList<>();
         Iterator<Order> orderIterator = orderList.iterator();
         while (orderIterator.hasNext()){
             Order order = orderIterator.next();
