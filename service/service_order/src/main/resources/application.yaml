@@ -19,7 +19,7 @@ alipay:
 
 spring:
   rabbitmq:
-    host: 81.68.67.192
+    host: 124.71.161.198
     port: 5673 #jingranshi5673
     username: admin
     password: admin
